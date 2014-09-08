@@ -1,0 +1,77 @@
+
+
+<%= declare_winner %>
+
+<%if session[:game_over]%>
+ <h5>
+    Play again?
+    <a href="/bet" class="btn btn-primary">Yes</a>
+    <a href="/game_over" class="btn">No</a>
+</h5>   
+<%end%>
+
+<div id="game">
+  <h1 id="title">Blackjack!</h1>
+
+  <div class="well" id="dealer">
+    <h4>Dealer's Cards:</h4>
+
+
+    <% if session[:player_turn]%>
+      <img src="/images/cards/cover.jpg" style="margin:0px 5px 5px 0px"> 
+      <%= desplay_card(@game.dealer.cards[1]) %>    
+    <%else%>
+      <% @game.dealer.cards.each do |card| %>
+        <%= desplay_card(card) %> 
+      <%end%>
+    <%end%> 
+
+    
+    <% if session[:dealer_turn]%>
+
+      <p id="dealer_total">
+        <form id="dealer_hit" action="/game/dealer/hit" method="POST">
+          <input value="Click to see dealer's next card →" class="btn btn-primary" type="submit">
+        </form>
+      <p></p>
+      <h5>Dealer has <%= @game.dealer.total %> and will hit.</h5>
+   <%end%>
+  </div>
+
+
+  <div class="well" id="player">
+    <h4><%= @game.player.name %>'s Cards:</h4>
+      <% @game.player.cards.each do |card| %>
+       <%= desplay_card(card) %> 
+      <%end%>
+
+
+    <% if session[:dealer_turn]%>
+      <h4><%= @game.player.name %> stayed at <%= @game.player.total %>. <%= @game.player.name %> has $<%= @game.player.money %> and bet $<%= @game.player.bet %> this round.</h4>
+    <%end%>
+  </div>
+
+
+
+    <% if session[:player_turn]%>
+    <h4>
+      <%= display_player_message(@game.player)%>
+    </h4>
+
+    <div class="row">
+      <div class="span1">
+        <form id="hit" action="/game/player/hit" method="POST" class="inline">
+          <input value="Hit" class="btn btn-success btn-large" type="submit">
+        </form>
+      </div>
+      <div class="span1">
+        <form id="stay" action="/game/player/stay" method="POST" class="inline">
+          <input value="Stay" class="btn btn-warning btn-large" type="submit">
+        </form>
+      </div>
+    </div>
+    <%end%>
+  
+</div>
+
+
